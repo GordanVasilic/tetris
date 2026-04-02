@@ -575,16 +575,325 @@
             margin-top: 5px;
         }
 
-        /* Responsive */
+        /* ============================================
+         * MOBILE TOUCH CONTROLS - HYBRID SYSTEM
+         * ============================================ */
+        
+        /* Control rail container */
+        .mobile-controls-container {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            z-index: 1000;
+            pointer-events: none; /* Let touches pass through container */
+        }
+
+        /* Collapsible control rail */
+        .control-rail {
+            height: var(--rail-height, 56px);
+            background: linear-gradient(to top,
+                rgba(10, 10, 20, 0.98) 0%,
+                rgba(15, 15, 30, 0.95) 50%,
+                rgba(10, 10, 20, 0.85) 100%);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border-top: 1px solid rgba(139, 92, 246, 0.4);
+            display: flex;
+            align-items: center;
+            justify-content: space-evenly;
+            padding: 8px 12px;
+            transition: transform 0.35cubic-bezier(0.4, 0, 0.2, 1);
+            pointer-events: auto;
+            box-shadow: 0 -4px 30px rgba(0, 0, 0, 0.4);
+        }
+
+        .control-rail.collapsed {
+            transform: translateY(calc(100% - var(--rail-collapsed-height, 8px)));
+        }
+
+        /* Control rail toggle hint */
+        .control-rail::before {
+            content: '↕';
+            position: absolute;
+            top: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 10px;
+            color: rgba(255, 255, 255, 0.4);
+            padding-top: 2px;
+            transition: opacity 0.3s ease;
+        }
+
+        .control-rail.collapsed::before {
+            opacity: 1;
+            animation: bounceHint 1.5s infinite;
+        }
+
+        .control-rail:not(.collapsed)::before {
+            opacity: 0;
+        }
+
+        @keyframes bounceHint {
+            0%, 100% { transform: translateX(-50%) translateY(0); }
+            50% { transform: translateX(-50%) translateY(-3px); }
+        }
+
+        /* Ripple animation for buttons */
+        @keyframes ripple {
+            from { transform: scale(0); opacity: 1; }
+            to { transform: scale(2.5); opacity: 0; }
+
+        /* Control buttons */
+        .control-btn {
+            width: var(--btn-size, 52px);
+            height: var(--btn-size, 52px);
+            min-width: var(--btn-size, 52px);
+            border-radius: 14px;
+            background: linear-gradient(135deg,
+                rgba(139, 92, 246, 0.35) 0%,
+                rgba(236, 72, 153, 0.35) 100%);
+            border: 1.5px solid rgba(139, 92, 246, 0.5);
+            color: #fff;
+            font-size: var(--icon-size, 22px);
+            font-weight: bold;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            user-select: none;
+            -webkit-user-select: none;
+            touch-action: manipulation;
+            transition: all 0.15cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            overflow: hidden;
+        }
+
+        /* Button shine effect */
+        .control-btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg,
+                transparent,
+                rgba(255, 255, 255, 0.2),
+                transparent);
+            transition: left 0.5s ease;
+        }
+
+        .control-btn:active::before {
+            left: 100%;
+        }
+
+        /* Button press effect */
+        .control-btn:active {
+            transform: scale(0.88);
+            background: linear-gradient(135deg,
+                rgba(139, 92, 246, 0.55) 0%,
+                rgba(236, 72, 153, 0.55) 100%);
+            box-shadow: 0 0 25px rgba(139, 92, 246, 0.6),
+                        inset 0 0 15px rgba(255, 255, 255, 0.2);
+        }
+
+        /* Ripple effect on touch */
+        .control-btn::after {
+            content: '';
+            position: absolute;
+            width: 200%;
+            height: 200%;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.3);
+            opacity: 0;
+            transform: scale(0);
+            transition: opacity 0.3s ease, transform 0.3s ease;
+        }
+
+        .control-btn:active::after {
+            opacity: 1;
+            transform: scale(1);
+        }
+
+        /* Special styling for action buttons */
+        .control-btn.btn-rotate {
+            background: linear-gradient(135deg,
+                rgba(59, 130, 246, 0.35) 0%,
+                rgba(16, 185, 129, 0.35) 100%);
+            border-color: rgba(59, 130, 246, 0.5);
+        }
+
+        .control-btn.btn-rotate:active {
+            background: linear-gradient(135deg,
+                rgba(59, 130, 246, 0.55) 0%,
+                rgba(16, 185, 129, 0.55) 100%);
+            box-shadow: 0 0 25px rgba(59, 130, 246, 0.6),
+                        inset 0 0 15px rgba(255, 255, 255, 0.2);
+        }
+
+        .control-btn.btn-drop {
+            background: linear-gradient(135deg,
+                rgba(251, 191, 36, 0.35) 0%,
+                rgba(249, 115, 22, 0.35) 100%);
+            border-color: rgba(251, 191, 36, 0.5);
+        }
+
+        .control-btn.btn-drop:active {
+            background: linear-gradient(135deg,
+                rgba(251, 191, 36, 0.55) 0%,
+                rgba(249, 115, 22, 0.55) 100%);
+            box-shadow: 0 0 25px rgba(251, 191, 36, 0.6),
+                        inset 0 0 15px rgba(255, 255, 255, 0.2);
+        }
+
+        /* Touch zone indicator (subtle overlay hint) */
+        .touch-zone-hint {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: var(--rail-height, 56px);
+            pointer-events: none;
+            z-index: 100;
+            display: flex;
+            justify-content: space-between;
+            padding: 20px 10px;
+            opacity: 0;
+            transition: opacity 0.5s ease;
+        }
+
+        .touch-zone-hint.visible {
+            opacity: 1;
+        }
+
+        .zone-label {
+            background: rgba(0, 0, 0, 0.6);
+            backdrop-filter: blur(4px);
+            padding: 8px 12px;
+            border-radius: 8px;
+            font-size: 11px;
+            color: rgba(255, 255, 255, 0.7);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        /* ============================================
+         * RESPONSIVE MOBILE STYLES
+         * ============================================ */
         @media (max-width: 768px) {
+            :root {
+                --rail-height: 60px;
+                --rail-collapsed-height: 8px;
+                --btn-size: 52px;
+                --icon-size: 22px;
+            }
+
+            body {
+                overflow-hidden;
+                touch-action: none;
+            }
+
+            /* Hide side panels on mobile */
+            .left-panel, .side-panel {
+                display: none !important;
+            }
+
+            /* Center the game container */
             .main-container {
                 flex-direction: column;
                 align-items: center;
-                gap: 15px;
+                justify-content: center;
+                gap: 0;
+                padding: 4px 8px;
+                width: 100%;
+                height: 100vh;
             }
-            
-            .left-panel, .side-panel {
-                display: none;
+
+            /* Game wrapper full screen */
+            .game-wrapper {
+                width: 100%;
+                max-width: 100vw;
+                padding: 1px;
+            }
+
+            .game-inner {
+                padding: 1px;
+            }
+
+            /* Canvas responsive scaling */
+            canvas#mainCanvas {
+                width: 100% !important;
+                height: auto !important;
+                aspect-ratio: 10/20;
+                max-height: calc(100vh - var(--rail-height, 60px));
+                display: block;
+            }
+
+            /* Adjust overlay positioning */
+            .overlay {
+                border-radius: 4px;
+            }
+
+            /* Title adjustments for mobile */
+            .title-logo {
+                font-size: 22px;
+                letter-spacing: 5px;
+            }
+
+            .subtitle {
+                font-size: 11px;
+                letter-spacing: 4px;
+            }
+
+            /* Button adjustments */
+            .btn-primary {
+                padding: 14px 36px;
+                font-size: 14px;
+            }
+        }
+
+        /* Extra small devices */
+        @media (max-width: 360px) {
+            :root {
+                --btn-size: 46px;
+                --icon-size: 20px;
+            }
+        }
+
+        /* Landscape mode on mobile */
+        @media (max-width: 768px) and (orientation: landscape) {
+            .game-wrapper {
+                max-height: calc(100vh - var(--rail-height, 60px));
+            }
+
+            canvas#mainCanvas {
+                max-height: calc(100vh - var(--rail-height, 60px));
+            }
+
+            /* Split control layout for landscape */
+            .control-rail {
+                display: grid;
+                grid-template-columns: auto 1fr auto;
+                gap: 8px;
+                padding: 8px 16px;
+            }
+
+            .control-btn-group {
+                display: flex;
+                gap: 6px;
+            }
+        }
+
+        /* iPad and tablets in portrait */
+        @media (min-width: 769px) and (max-width: 1024px) and (orientation: portrait) {
+            .game-wrapper {
+                max-height: calc(100vh - 80px);
+            }
+
+            canvas#mainCanvas {
+                width: auto !important;
+                height: auto !important;
+                max-height: calc(100vh - 80px);
             }
         }
     </style>
@@ -630,6 +939,12 @@
                 <div class="game-board">
                     <canvas id="mainCanvas" width="360" height="720"></canvas>
                     
+                    <!-- Touch zone hint overlay (shows briefly on first launch) -->
+                    <div class="touch-zone-hint" id="touchZoneHint">
+                        <span class="zone-label">← Swipe</span>
+                        <span class="zone-label">Swipe →</span>
+                    </div>
+                    
                     <!-- Start overlay -->
                     <div id="startOverlay" class="overlay">
                         <h1 class="title-logo">DEVELOTRIX</h1>
@@ -673,6 +988,16 @@
                         </div>
                     </div>
                 </div>
+            </div>
+        </div>
+
+        <!-- Mobile Touch Controls -->
+        <div class="mobile-controls-container" id="mobileControlsContainer">
+            <div class="control-rail collapsed" id="controlRail">
+                <button class="control-btn btn-left" data-action="left" aria-label="Move Left">◄</button>
+                <button class="control-btn btn-right" data-action="right" aria-label="Move Right">►</button>
+                <button class="control-btn btn-rotate" data-action="rotate" aria-label="Rotate">↻</button>
+                <button class="control-btn btn-drop" data-action="drop" aria-label="Hard Drop">⤓</button>
             </div>
         </div>
         
@@ -779,11 +1104,382 @@
         let dropInterval = 1000;
 
         // ============================================
-        // MOBILE TOUCH CONTROLS
+        // MOBILE TOUCH CONTROLLER - GESTURE RECOGNITION
         // ============================================
-        let touchStartX = 0;
-        let touchStartY = 0;
-        const SWIPE_THRESHOLD = 40;
+        class MobileTouchController {
+            constructor(gameAPI, options = {}) {
+                this.game = gameAPI;
+                this.options = {
+                    swipeThreshold: 25,
+                    tapDuration: 200,
+                    doubleTapWindow: 300,
+                    enableHaptics: true,
+                    ...options
+                };
+
+                this.state = {
+                    touches: new Map(),
+                    lastTapTime: 0,
+                    lastTapPos: null,
+                    isDragging: false,
+                    tapCount: 0
+                };
+
+                this.hapticPatterns = {
+                    move: 5,
+                    rotate: 10,
+                    soft_drop: 8,
+                    hard_drop: [25, 40],
+                    line_clear: [10, 30, 10]
+                };
+
+                this.init();
+            }
+
+            init() {
+                this.canvas = document.getElementById('mainCanvas');
+                if (!this.canvas) return;
+
+                // Touch event listeners with passive: false for preventDefault
+                this.canvas.addEventListener('touchstart',
+                    (e) => this.handleTouchStart(e), { passive: false });
+                this.canvas.addEventListener('touchmove',
+                    (e) => this.handleTouchMove(e), { passive: false });
+                this.canvas.addEventListener('touchend',
+                    (e) => this.handleTouchEnd(e), { passive: false });
+                this.canvas.addEventListener('touchcancel',
+                    (e) => this.handleTouchCancel(e), { passive: false });
+
+                // Prevent browser default behaviors
+                this.canvas.style.touchAction = 'none';
+            }
+
+            handleTouchStart(e) {
+                if (!this.game.isRunning || this.game.isPaused) return;
+                e.preventDefault();
+
+                const now = performance.now();
+
+                for (const touch of e.changedTouches) {
+                    // Check for double-tap (hard drop)
+                    if (this.detectDoubleTap(touch, now)) {
+                        this.executeHardDrop();
+                        continue;
+                    }
+
+                    // Single tap = rotate
+                    this.state.tapCount++;
+                    this.state.lastTapPos = { x: touch.clientX, y: touch.clientY };
+                    this.state.lastTapTime = now;
+
+                    // Track touch for swipe detection
+                    this.state.touches.set(touch.identifier, {
+                        x: touch.clientX,
+                        y: touch.clientY,
+                        time: now,
+                        hasMoved: false
+                    });
+                }
+            }
+
+            handleTouchMove(e) {
+                if (!this.game.isRunning || this.game.isPaused) return;
+                e.preventDefault();
+
+                for (const touch of e.changedTouches) {
+                    const original = this.state.touches.get(touch.identifier);
+                    if (!original || original.hasMoved) continue;
+
+                    const dx = touch.clientX - original.x;
+                    const dy = touch.clientY - original.y;
+                    const distance = Math.sqrt(dx * dx + dy * dy);
+
+                    // Check if movement exceeds threshold
+                    if (distance > this.options.swipeThreshold) {
+                        original.hasMoved = true;
+                        this.state.isDragging = true;
+
+                        // Determine primary direction
+                        if (Math.abs(dx) > Math.abs(dy)) {
+                            // Horizontal swipe - move piece
+                            if (dx > 0) {
+                                this.executeMoveRight();
+                            } else {
+                                this.executeMoveLeft();
+                            }
+                            // Reset X for continuous swipe detection
+                            original.x = touch.clientX;
+                        } else {
+                            // Vertical swipe - soft drop
+                            if (dy > 0) {
+                                const moved = this.executeSoftDrop();
+                                if (moved) {
+                                    score += 1;
+                                    updateUI();
+                                }
+                                original.y = touch.clientY;
+                            }
+                        }
+                    }
+                }
+            }
+
+            handleTouchEnd(e) {
+                e.preventDefault();
+
+                for (const touch of e.changedTouches) {
+                    const touchData = this.state.touches.get(touch.identifier);
+                    
+                    // If tap wasn't converted to drag, execute rotate
+                    if (touchData && !touchData.hasMoved) {
+                        this.executeRotate();
+                    }
+
+                    this.state.touches.delete(touch.identifier);
+                }
+
+                // Reset drag state if no touches remain
+                if (this.state.touches.size === 0) {
+                    this.state.isDragging = false;
+                }
+            }
+
+            handleTouchCancel(e) {
+                e.preventDefault();
+                this.state.touches.clear();
+                this.state.isDragging = false;
+            }
+
+            detectDoubleTap(touch, now) {
+                const timeDiff = now - this.state.lastTapTime;
+                if (timeDiff > this.options.doubleTapWindow) return false;
+
+                if (!this.state.lastTapPos) return false;
+
+                const dist = Math.hypot(
+                    touch.clientX - this.state.lastTapPos.x,
+                    touch.clientY - this.state.lastTapPos.y
+                );
+
+                // Double tap within 50px and time window
+                if (dist < 50) {
+                    this.state.tapCount = 2;
+                    return true;
+                }
+
+                return false;
+            }
+
+            // Action execution methods
+            executeMoveLeft() {
+                if (this.game.movePiece(-1, 0)) {
+                    this.triggerHaptic('move');
+                }
+            }
+
+            executeMoveRight() {
+                if (this.game.movePiece(1, 0)) {
+                    this.triggerHaptic('move');
+                }
+            }
+
+            executeRotate() {
+                this.game.rotatePiece();
+                this.triggerHaptic('rotate');
+            }
+
+            executeSoftDrop() {
+                return this.game.movePiece(0, 1);
+            }
+
+            executeHardDrop() {
+                this.game.hardDrop();
+                this.triggerHaptic('hard_drop');
+            }
+
+            // Haptic feedback (Android only - iOS Safari doesn't support it)
+            triggerHaptic(pattern) {
+                if (!this.options.enableHaptics || !navigator.vibrate) return;
+
+                try {
+                    navigator.vibrate(this.hapticPatterns[pattern] || 10);
+                } catch (e) {
+                    // Ignore haptic errors
+                }
+            }
+
+            cleanup() {
+                this.state.touches.clear();
+                this.state.isDragging = false;
+            }
+        }
+
+        // ============================================
+        // ON-SCREEN BUTTON CONTROLS WITH AUTO-HIDE
+        // ============================================
+        class OnScreenControls {
+            constructor(gameAPI, options = {}) {
+                this.game = gameAPI;
+                this.options = {
+                    autoHideDelay: 3000,
+                    ...options
+                };
+
+                this.controlRail = null;
+                this.hideTimer = null;
+                this.isCollapsed = true;
+
+                this.init();
+            }
+
+            init() {
+                this.controlRail = document.getElementById('controlRail');
+                if (!this.controlRail) return;
+
+                this.setupButtonHandlers();
+                this.setupAutoHide();
+                this.setupGlobalTouchHandler();
+            }
+
+            setupButtonHandlers() {
+                // Left button
+                const btnLeft = this.controlRail.querySelector('.btn-left');
+                if (btnLeft) {
+                    btnLeft.addEventListener('touchstart', (e) => {
+                        e.preventDefault();
+                        e.stopPropagation();
+                        this.game.movePiece(-1, 0);
+                        this.addRippleEffect(e.target, e);
+                    }, { passive: false });
+                }
+
+                // Right button
+                const btnRight = this.controlRail.querySelector('.btn-right');
+                if (btnRight) {
+                    btnRight.addEventListener('touchstart', (e) => {
+                        e.preventDefault();
+                        e.stopPropagation();
+                        this.game.movePiece(1, 0);
+                        this.addRippleEffect(e.target, e);
+                    }, { passive: false });
+                }
+
+                // Rotate button
+                const btnRotate = this.controlRail.querySelector('.btn-rotate');
+                if (btnRotate) {
+                    btnRotate.addEventListener('touchstart', (e) => {
+                        e.preventDefault();
+                        e.stopPropagation();
+                        this.game.rotatePiece();
+                        this.addRippleEffect(e.target, e);
+                    }, { passive: false });
+                }
+
+                // Hard drop button
+                const btnDrop = this.controlRail.querySelector('.btn-drop');
+                if (btnDrop) {
+                    btnDrop.addEventListener('touchstart', (e) => {
+                        e.preventDefault();
+                        e.stopPropagation();
+                        this.game.hardDrop();
+                        this.addRippleEffect(e.target, e);
+                    }, { passive: false });
+                }
+            }
+
+            setupAutoHide() {
+                const scheduleHide = () => {
+                    if (this.hideTimer) clearTimeout(this.hideTimer);
+                    
+                    this.hideTimer = setTimeout(() => {
+                        if (this.game.isRunning && !this.game.isPaused) {
+                            this.hide();
+                        }
+                    }, this.options.autoHideDelay);
+                };
+
+                // Reset timer on any interaction with control rail
+                this.controlRail.addEventListener('touchstart', () => {
+                    scheduleHide();
+                }, { passive: true });
+
+                this.controlRail.addEventListener('mouseenter', () => {
+                    scheduleHide();
+                });
+            }
+
+            setupGlobalTouchHandler() {
+                // Show controls on any touch anywhere on page
+                document.addEventListener('touchstart', (e) => {
+                    // Don't show if touching the control rail itself while hidden
+                    if (e.target.closest('.control-rail')) return;
+                    
+                    this.show();
+                }, { passive: true });
+            }
+
+            addRippleEffect(button, event) {
+                const rect = button.getBoundingClientRect();
+                const ripple = document.createElement('span');
+                const size = Math.max(rect.width, rect.height);
+                
+                ripple.style.cssText = `
+                    position: absolute;
+                    width: ${size}px;
+                    height: ${size}px;
+                    left: ${event.clientX - rect.left - size/2}px;
+                    top: ${event.clientY - rect.top - size/2}px;
+                    background: rgba(255, 255, 255, 0.4);
+                    border-radius: 50%;
+                    transform: scale(0);
+                    animation: ripple 0.4s ease-out;
+                    pointer-events: none;
+                `;
+
+                button.style.position = 'relative';
+                button.style.overflow = 'hidden';
+                button.appendChild(ripple);
+
+                setTimeout(() => ripple.remove(), 400);
+            }
+
+            show() {
+                if (!this.controlRail) return;
+                this.controlRail.classList.remove('collapsed');
+                this.isCollapsed = false;
+            }
+
+            hide() {
+                if (!this.controlRail) return;
+                this.controlRail.classList.add('collapsed');
+                this.isCollapsed = true;
+            }
+
+            toggle() {
+                this.isCollapsed ? this.show() : this.hide();
+            }
+        }
+
+        // ============================================
+        // KEYBOARD FALLBACK (for desktop testing)
+        // ============================================
+        const KEYBOARD_CONTROLS = {
+            'ArrowLeft':  () => window.gameInstance.movePiece(-1, 0),
+            'ArrowRight': () => window.gameInstance.movePiece(1, 0),
+            'ArrowDown':  () => { 
+                if (window.gameInstance.movePiece(0, 1)) {
+                    window.gameInstance.score += 1;
+                    window.gameInstance.updateUI();
+                }
+            },
+            'ArrowUp':    () => window.gameInstance.rotatePiece(),
+            ' ':          () => { 
+                event.preventDefault();
+                window.gameInstance.hardDrop();
+            },
+            'p':          () => window.togglePause(),
+            'P':          () => window.togglePause()
+        };
 
         // ============================================
         // PARTICLE SYSTEM FOR EXPLOSIONS
@@ -1383,6 +2079,11 @@
             gameRunning = false;
             if (animationId) cancelAnimationFrame(animationId);
             
+            // Update gameAPI for touch controllers
+            if (window.gameAPI) {
+                window.gameAPI.isRunning = false;
+            }
+            
             document.getElementById('finalScore').textContent = score.toLocaleString();
             document.getElementById('gameOverOverlay').classList.remove('hidden');
         }
@@ -1405,6 +2106,32 @@
             gameRunning = true;
             gamePaused = false;
             lastDropTime = performance.now();
+            
+            // Initialize mobile touch controls if not already initialized
+            if (!window.touchController || !window.onScreenControls) {
+                const gameAPI = {
+                    get isRunning() { return gameRunning; },
+                    get isPaused() { return gamePaused; },
+                    movePiece: movePiece,
+                    rotatePiece: rotatePiece,
+                    hardDrop: hardDrop,
+                    updateUI: updateUI
+                };
+                
+                window.touchController = new MobileTouchController(gameAPI);
+                window.onScreenControls = new OnScreenControls(gameAPI);
+            }
+            
+            // Show touch hint on first play (if not shown before)
+            const hintShown = sessionStorage.getItem('touchHintShown');
+            if (!hintShown && /Android|iPhone|iPad|iPod/i.test(navigator.userAgent)) {
+                document.getElementById('touchZoneHint').classList.add('visible');
+                setTimeout(() => {
+                    document.getElementById('touchZoneHint').classList.remove('visible');
+                }, 2000);
+                sessionStorage.setItem('touchHintShown', 'true');
+            }
+            
             gameLoop();
         }
 
@@ -1417,13 +2144,12 @@
             
             gamePaused = !gamePaused;
             
+            // Update gameAPI for touch controllers
+            if (window.gameAPI) {
+                window.gameAPI.isPaused = gamePaused;
+            }
+            
             if (gamePaused) {
-                const overlay = document.createElement('div');
-                overlay.className = 'overlay';
-                overlay.id = 'pauseOverlay';
-                overlay.innerHTML = '<h2 class="pause-text">PAUSED</h2>';
-                canvas.parentElement.appendChild(overlay);
-            } else {
                 const existing = document.getElementById('pauseOverlay');
                 if (existing) existing.remove();
                 lastDropTime = performance.now();
