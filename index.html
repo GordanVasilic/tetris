@@ -789,7 +789,8 @@
             }
 
             body {
-                overflow-hidden;
+                overflow-x: hidden;
+                overflow-y: auto;
                 touch-action: none;
             }
 
@@ -798,34 +799,36 @@
                 display: none !important;
             }
 
-            /* Center the game container */
+            /* Center the game container - use flex to center */
             .main-container {
                 flex-direction: column;
                 align-items: center;
                 justify-content: center;
                 gap: 0;
-                padding: 4px 8px;
+                padding: 12px 6px;
+                min-height: 100vh;
                 width: 100%;
-                height: 100vh;
             }
 
-            /* Game wrapper full screen */
+            /* Game wrapper - let content determine size */
             .game-wrapper {
-                width: 100%;
-                max-width: 100vw;
-                padding: 1px;
+                width: auto !important;
+                max-width: none !important;
+                padding: 2px;
+                margin: 0;
             }
 
             .game-inner {
-                padding: 1px;
+                padding: 2px;
+                margin: 0 auto;
             }
 
-            /* Canvas responsive scaling */
+            /* Canvas - fixed logical size but scaled to fit mobile */
             canvas#mainCanvas {
-                width: 100% !important;
+                width: 360px !important;  /* Logical width = 10 cols × 36px block */
                 height: auto !important;
                 aspect-ratio: 10/20;
-                max-height: calc(100vh - var(--rail-height, 60px));
+                max-width: calc(100vw - 24px) !important;  /* Fit screen minus padding */
                 display: block;
             }
 
@@ -1210,14 +1213,10 @@
                             // Reset X for continuous swipe detection
                             original.x = touch.clientX;
                         } else {
-                            // Vertical swipe - soft drop
+                            // Vertical swipe down - fast/hard drop
                             if (dy > 0) {
-                                const moved = this.executeSoftDrop();
-                                if (moved) {
-                                    score += 1;
-                                    updateUI();
-                                }
-                                original.y = touch.clientY;
+                                this.executeHardDrop();
+                                original.hasMoved = true; // Don't repeat for same gesture
                             }
                         }
                     }
