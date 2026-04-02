@@ -1,0 +1,61 @@
+- generic [ref=e54]:
+  - generic [ref=e55]:
+    - heading "Next" [level=3] [ref=e56]
+    - generic:
+      - heading "Score" [level=3] [ref=e58]
+      - paragraph [ref=e59]: "0"
+    - generic:
+      - heading "Level" [level=3] [ref=e60]
+      - paragraph [ref=e61]: "1"
+    - generic:
+      - heading "Lines" [level=3] [ref=e62]
+      - paragraph [ref=e63]: "0"
+    - generic:
+      - heading "Best" [level=3] [ref=e64]
+      - paragraph [ref=e65]: "0"
+  - generic [ref=e68]:
+    - generic [ref=e70]:
+      - heading "DEVELOTRIX" [level=1] [ref=e71]
+      - paragraph [ref=e72]: Modern Edition
+      - button "Play Now" [ref=e73] [cursor=pointer]
+      - button "⚙️" [ref=e74] [cursor=pointer]
+    - generic:
+      - heading "GAME OVER" [level=2]
+      - paragraph: Final Score
+      - paragraph: "0"
+      - button "Play Again"
+    - generic:
+      - generic:
+        - heading "SETTINGS" [level=2]
+        - generic:
+          - generic: Sound Volume
+          - slider "Sound Volume": "75"
+          - generic: 75%
+        - generic:
+          - generic: Difficulty
+          - combobox "Difficulty":
+            - option "Easy"
+            - option "Normal" [selected]
+            - option "Hard"
+        - button "Reset High Score"
+        - button "Apply & Close"
+  - generic [ref=e75]:
+    - generic:
+      - heading "Controls" [level=3] [ref=e76]
+      - list [ref=e77]:
+        - listitem [ref=e78]:
+          - generic [ref=e79]: ←
+          - generic [ref=e80]: →
+          - text: Move
+        - listitem [ref=e81]:
+          - generic [ref=e82]: ↑
+          - text: Rotate
+        - listitem [ref=e83]:
+          - generic [ref=e84]: ↓
+          - text: Soft Drop
+        - listitem [ref=e85]:
+          - generic [ref=e86]: Space
+          - text: Hard Drop
+        - listitem [ref=e87]:
+          - generic [ref=e88]: P
+          - text: Pause

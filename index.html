@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>TETRIS - Modern Edition</title>
+    <title>DEVELOTRIX - Modern Edition</title>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Rajdhani:wght@300;500;700&display=swap');
 
@@ -16,6 +16,7 @@
         body {
             background: #0a0a0f;
             min-height: 100vh;
+            height: 100vh;
             display: flex;
             justify-content: center;
             align-items: center;
@@ -76,20 +77,21 @@
             100% { transform: translateY(-100vh) translateX(50px); opacity: 0; }
         }
 
-        /* Main container */
+        /* Main container - more compact layout */
         .main-container {
             display: flex;
-            gap: 30px;
-            padding: 20px;
+            gap: 10px;
+            padding: 8px 12px;
             position: relative;
+            align-items: center;
         }
 
         /* Game wrapper with glow effect */
         .game-wrapper {
             position: relative;
-            padding: 4px;
+            padding: 2px;
             background: linear-gradient(135deg, #8b5cf6, #ec4899, #06b6d4);
-            border-radius: 20px;
+            border-radius: 14px;
             animation: borderGlow 3s ease-in-out infinite;
         }
 
@@ -106,22 +108,22 @@
             right: -2px;
             bottom: -2px;
             background: linear-gradient(135deg, #8b5cf6, #ec4899, #06b6d4);
-            border-radius: 22px;
+            border-radius: 16px;
             z-index: -1;
             animation: borderGlow 3s ease-in-out infinite;
         }
 
         .game-inner {
             background: linear-gradient(180deg, #0f0f1a 0%, #1a1a2e 50%, #0f0f1a 100%);
-            border-radius: 16px;
-            padding: 3px;
+            border-radius: 11px;
+            padding: 2px;
             position: relative;
         }
 
         .game-board {
             position: relative;
             background: linear-gradient(180deg, #0a0a0f 0%, #12121f 100%);
-            border-radius: 12px;
+            border-radius: 9px;
             overflow: hidden;
             box-shadow: inset 0 0 60px rgba(0, 0, 0, 0.8);
         }
@@ -130,23 +132,42 @@
             display: block;
         }
 
-        /* Side panel */
-        .side-panel {
+        /* Left panel (compact stats + next piece) */
+        .left-panel {
             display: flex;
             flex-direction: column;
-            gap: 15px;
-            min-width: 180px;
+            gap: 6px;
+            min-width: 95px;
             user-select: none;
             -webkit-user-select: none;
             -moz-user-select: none;
             -ms-user-select: none;
         }
 
+        /* Side panel (right) - more compact */
+        .side-panel {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+            min-width: 100px;
+            user-select: none;
+            -webkit-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
+        }
+
+        /* Two-column grid for side panel */
+        .side-panel-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 8px;
+        }
+
         .panel-card {
             background: linear-gradient(135deg, rgba(20, 20, 40, 0.9) 0%, rgba(10, 10, 25, 0.95) 100%);
             border: 1px solid rgba(139, 92, 246, 0.3);
-            border-radius: 16px;
-            padding: 20px;
+            border-radius: 12px;
+            padding: 12px;
             text-align: center;
             position: relative;
             overflow: hidden;
@@ -285,7 +306,7 @@
 
         .title-logo {
             font-family: 'Orbitron', sans-serif;
-            font-size: 56px;
+            font-size: 28px;
             font-weight: 900;
             background: linear-gradient(135deg, #8b5cf6, #ec4899, #fbbf24);
             -webkit-background-clip: text;
@@ -427,23 +448,143 @@
             text-shadow: 0 0 60px rgba(251, 191, 36, 0.8);
         }
 
+        /* Settings button */
+        .btn-settings {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            width: 40px;
+            height: 40px;
+            font-size: 24px;
+            background: rgba(139, 92, 246, 0.2);
+            border: 1px solid rgba(139, 92, 246, 0.5);
+            border-radius: 50%;
+            color: #fff;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .btn-settings:hover {
+            background: rgba(139, 92, 246, 0.4);
+            transform: rotate(90deg);
+        }
+
+        /* Settings content */
+        .settings-content {
+            background: linear-gradient(135deg, rgba(20, 20, 40, 0.95) 0%, rgba(10, 10, 25, 0.98) 100%);
+            border: 1px solid rgba(139, 92, 246, 0.3);
+            border-radius: 20px;
+            padding: 40px;
+            min-width: 320px;
+            text-align: center;
+        }
+
+        .settings-title {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 28px;
+            font-weight: 900;
+            background: linear-gradient(135deg, #8b5cf6, #ec4899);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 30px;
+            letter-spacing: 4px;
+        }
+
+        .setting-item {
+            margin-bottom: 25px;
+            text-align: left;
+        }
+
+        .setting-item label {
+            display: block;
+            color: #a78bfa;
+            font-size: 12px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            margin-bottom: 10px;
+        }
+
+        .setting-item input[type="range"] {
+            width: calc(100% - 40px);
+            height: 6px;
+            border-radius: 3px;
+            background: #1f2937;
+            outline: none;
+            -webkit-appearance: none;
+        }
+
+        .setting-item input[type="range"]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            width: 18px;
+            height: 18px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #8b5cf6, #ec4899);
+            cursor: pointer;
+            box-shadow: 0 0 10px rgba(139, 92, 246, 0.6);
+        }
+
+        .setting-item select {
+            width: calc(100% - 20px);
+            padding: 12px 15px;
+            font-family: 'Rajdhani', sans-serif;
+            font-size: 14px;
+            font-weight: 600;
+            color: #fff;
+            background: linear-gradient(135deg, #1f2937, #374151);
+            border: 1px solid rgba(139, 92, 246, 0.3);
+            border-radius: 8px;
+            cursor: pointer;
+            outline: none;
+        }
+
+        .setting-item select:focus {
+            border-color: #8b5cf6;
+        }
+
+        .btn-secondary {
+            padding: 12px 30px;
+            font-family: 'Orbitron', sans-serif;
+            font-size: 12px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            color: #9ca3af;
+            background: transparent;
+            border: 1px solid rgba(156, 163, 175, 0.4);
+            border-radius: 25px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .btn-secondary:hover {
+            color: #ef4444;
+            border-color: rgba(239, 68, 68, 0.5);
+        }
+
+        #volumeValue {
+            display: block;
+            text-align: right;
+            color: #a78bfa;
+            font-size: 14px;
+            font-weight: 600;
+            margin-top: 5px;
+        }
+
         /* Responsive */
         @media (max-width: 768px) {
             .main-container {
                 flex-direction: column;
                 align-items: center;
+                gap: 15px;
             }
             
-            .side-panel {
-                flex-direction: row;
-                flex-wrap: wrap;
-                justify-content: center;
-                min-width: auto;
-            }
-            
-            .panel-card {
-                padding: 12px 15px;
-                min-width: 100px;
+            .left-panel, .side-panel {
+                display: none;
             }
         }
     </style>
@@ -455,17 +596,46 @@
     </div>
 
     <div class="main-container">
+        <!-- Left panel (next piece + score + level + lines + best) -->
+        <div class="left-panel">
+            <div class="panel-card" style="padding: 12px; min-height: 115px; display: flex; flex-direction: column; align-items: center; justify-content: center;">
+                <h3 style="font-size: 10px;">Next</h3>
+                <canvas id="nextCanvas" width="90" height="72"></canvas>
+            </div>
+            
+            <div class="panel-card score" style="padding: 12px;">
+                <h3 style="font-size: 10px;">Score</h3>
+                <p class="value" id="score" style="font-size: 24px;">0</p>
+            </div>
+            
+            <div class="panel-card" style="padding: 12px;">
+                <h3 style="font-size: 10px;">Level</h3>
+                <p class="value" id="level" style="font-size: 24px;">1</p>
+            </div>
+            
+            <div class="panel-card" style="padding: 12px;">
+                <h3 style="font-size: 10px;">Lines</h3>
+                <p class="value" id="lines" style="font-size: 24px;">0</p>
+            </div>
+            
+            <div class="panel-card score" style="padding: 12px;">
+                <h3 style="font-size: 10px;">Best</h3>
+                <p class="value" id="best" style="font-size: 24px;">0</p>
+            </div>
+        </div>
+
         <!-- Game wrapper with animated border -->
         <div class="game-wrapper">
             <div class="game-inner">
                 <div class="game-board">
-                    <canvas id="mainCanvas" width="300" height="600"></canvas>
+                    <canvas id="mainCanvas" width="360" height="720"></canvas>
                     
                     <!-- Start overlay -->
                     <div id="startOverlay" class="overlay">
-                        <h1 class="title-logo">TETRIS</h1>
+                        <h1 class="title-logo">DEVELOTRIX</h1>
                         <p class="subtitle">Modern Edition</p>
                         <button class="btn-primary" onclick="startGame()">Play Now</button>
+                        <button class="btn-settings" onclick="openSettings()" title="Settings">⚙️</button>
                     </div>
                     
                     <!-- Game over overlay -->
@@ -476,35 +646,41 @@
                         <br>
                         <button class="btn-primary" onclick="restartGame()">Play Again</button>
                     </div>
+                    
+                    <!-- Settings overlay -->
+                    <div id="settingsOverlay" class="overlay hidden">
+                        <div class="settings-content">
+                            <h2 class="settings-title">SETTINGS</h2>
+                            
+                            <div class="setting-item">
+                                <label for="volumeSlider">Sound Volume</label>
+                                <input type="range" id="volumeSlider" min="0" max="100" value="75">
+                                <span id="volumeValue">75%</span>
+                            </div>
+                            
+                            <div class="setting-item">
+                                <label for="difficultySelect">Difficulty</label>
+                                <select id="difficultySelect">
+                                    <option value="easy">Easy</option>
+                                    <option value="normal" selected>Normal</option>
+                                    <option value="hard">Hard</option>
+                                </select>
+                            </div>
+                            
+                            <button class="btn-secondary" onclick="resetHighScoreAndClose()">Reset High Score</button>
+                            <br><br>
+                            <button class="btn-primary" onclick="saveSettingsAndClose()">Apply & Close</button>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
         
-        <!-- Side panel -->
+        <!-- Side panel (right) - controls only -->
         <div class="side-panel">
-            <div class="panel-card">
-                <h3>Next Piece</h3>
-                <canvas id="nextCanvas" width="120" height="120"></canvas>
-            </div>
-            
-            <div class="panel-card score">
-                <h3>Score</h3>
-                <p class="value" id="score">0</p>
-            </div>
-            
-            <div class="panel-card">
-                <h3>Level</h3>
-                <p class="value" id="level">1</p>
-            </div>
-            
-            <div class="panel-card">
-                <h3>Lines</h3>
-                <p class="value" id="lines">0</p>
-            </div>
-            
-            <div class="panel-card controls-card">
-                <h3>Controls</h3>
-                <ul>
+            <div class="panel-card controls-card" style="padding: 15px;">
+                <h3 style="font-size: 12px;">Controls</h3>
+                <ul style="font-size: 14px; line-height: 1.8; padding-left: 2px; margin-top: 6px;">
                     <li><span class="key">←</span> <span class="key">→</span> Move</li>
                     <li><span class="key">↑</span> Rotate</li>
                     <li><span class="key">↓</span> Soft Drop</li>
@@ -542,12 +718,28 @@
         const nextCtx = nextCanvas.getContext('2d');
 
         // ============================================
+        // STORAGE & SETTINGS
+        // ============================================
+        const STORAGE_KEY = 'develotrix_data';
+        
+        let settings = {
+            volume: 0.75,
+            difficulty: 'normal'
+        };
+        
+        const DIFFICULTY_CONFIG = {
+            easy:   { baseInterval: 1500, decreasePerLevel: 60,  minInterval: 200 },
+            normal: { baseInterval: 1000, decreasePerLevel: 80,  minInterval: 100 },
+            hard:   { baseInterval: 600,  decreasePerLevel: 100, minInterval: 50 }
+        };
+
+        // ============================================
         // GAME CONSTANTS
         // ============================================
         const COLS = 10;
         const ROWS = 20;
-        const BLOCK_SIZE = 30;
-        const NEXT_BLOCK_SIZE = 25;
+        const BLOCK_SIZE = 36;
+        const NEXT_BLOCK_SIZE = 27;
 
         // Modern neon color palette for tetrominoes
         const TETROMINOES = {
@@ -568,6 +760,30 @@
         };
 
         const TETROMINO_KEYS = Object.keys(TETROMINOES);
+
+        // ============================================
+        // HIGH SCORE & GAME STATE
+        // ============================================
+        let highScore = 0;
+        
+        let score = 0;
+        let level = 1;
+        let linesCleared = 0;
+        let currentPiece = null;
+        let nextPiece = null;
+        let board = [];
+        let gameRunning = false;
+        let gamePaused = false;
+        let animationId = null;
+        let lastDropTime = 0;
+        let dropInterval = 1000;
+
+        // ============================================
+        // MOBILE TOUCH CONTROLS
+        // ============================================
+        let touchStartX = 0;
+        let touchStartY = 0;
+        const SWIPE_THRESHOLD = 40;
 
         // ============================================
         // PARTICLE SYSTEM FOR EXPLOSIONS
@@ -641,6 +857,83 @@
                 ctx.fill();
                 
                 ctx.restore();
+            }
+        }
+
+        // ============================================
+        // LOCAL STORAGE FUNCTIONS
+        // ============================================
+        function loadFromStorage() {
+            try {
+                const stored = localStorage.getItem(STORAGE_KEY);
+                if (stored) {
+                    const data = JSON.parse(stored);
+                    highScore = data.highScore || 0;
+                    if (data.settings) {
+                        settings.volume = data.settings.volume ?? 0.75;
+                        settings.difficulty = data.settings.difficulty ?? 'normal';
+                    }
+                }
+            } catch (e) {
+                console.warn('Could not load from storage:', e);
+            }
+        }
+
+        function saveToStorage() {
+            try {
+                localStorage.setItem(STORAGE_KEY, JSON.stringify({
+                    highScore: highScore,
+                    settings: settings
+                }));
+            } catch (e) {
+                console.warn('Could not save to storage:', e);
+            }
+        }
+
+        function saveHighScore(score) {
+            if (score > highScore) {
+                highScore = score;
+                saveToStorage();
+                updateUI();
+            }
+        }
+
+        function resetHighScore() {
+            highScore = 0;
+            saveToStorage();
+            updateUI();
+        }
+
+        // ============================================
+        // SETTINGS MENU FUNCTIONS
+        // ============================================
+        function openSettings() {
+            const overlay = document.getElementById('settingsOverlay');
+            const volumeSlider = document.getElementById('volumeSlider');
+            const difficultySelect = document.getElementById('difficultySelect');
+            
+            volumeSlider.value = Math.round(settings.volume * 100);
+            document.getElementById('volumeValue').textContent = volumeSlider.value + '%';
+            difficultySelect.value = settings.difficulty;
+            
+            overlay.classList.remove('hidden');
+        }
+
+        function saveSettingsAndClose() {
+            const volumeSlider = document.getElementById('volumeSlider');
+            const difficultySelect = document.getElementById('difficultySelect');
+            
+            settings.volume = parseInt(volumeSlider.value) / 100;
+            settings.difficulty = difficultySelect.value;
+            
+            saveToStorage();
+            document.getElementById('settingsOverlay').classList.add('hidden');
+        }
+
+        function resetHighScoreAndClose() {
+            if (confirm('Are you sure you want to reset your high score?')) {
+                resetHighScore();
+                document.getElementById('settingsOverlay').classList.add('hidden');
             }
         }
 
@@ -787,6 +1080,9 @@
                 
                 // Remove cleared lines with animation delay
                 setTimeout(() => {
+                    // Sort in ascending order so we remove from top first
+                    // This prevents index shifting issues when removing multiple lines
+                    linesToClear.sort((a, b) => a - b);
                     for (const line of linesToClear) {
                         board.splice(line, 1);
                         board.unshift(Array(COLS).fill(null));
@@ -797,6 +1093,9 @@
                     const earnedPoints = points[linesToClear.length] * level;
                     score += earnedPoints;
                     linesCleared += linesToClear.length;
+                    
+                    // Play subtle sound effect
+                    playLineClearSound(linesToClear.length);
                     
                     // Show floating score
                     showScorePopup(earnedPoints);
@@ -811,6 +1110,72 @@
                     dropInterval = Math.max(50, 1000 - (level - 1) * 80);
                     updateUI();
                 }, 300);
+            }
+        }
+
+        // ============================================
+        // AUDIO SYSTEM - SUBTLE SOUND EFFECTS
+        // ============================================
+        let audioCtx = null;
+
+        function initAudio() {
+            if (!audioCtx) {
+                try {
+                    audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+                } catch (e) {
+                    console.warn('Web Audio API not supported');
+                    audioCtx = null;
+                }
+            }
+        }
+
+        function playLineClearSound(linesClearedCount) {
+            if (!audioCtx || settings.volume <= 0) return;
+            
+            // Resume context if suspended (browser autoplay policy)
+            if (audioCtx.state === 'suspended') {
+                audioCtx.resume();
+            }
+
+            const now = audioCtx.currentTime;
+            const baseFreq = 440; // A4
+            
+            // More lines = higher pitch and more notes
+            const noteCount = Math.min(linesClearedCount, 4);
+            const frequencies = [
+                baseFreq * 1.2599,   // C#5 (single line)
+                baseFreq * 1.4983,   // E5  (double)
+                baseFreq * 1.7818,   // G#5 (triple)
+                baseFreq * 2.0      // A5  (tetris!)
+            ];
+
+            for (let i = 0; i < noteCount; i++) {
+                const osc = audioCtx.createOscillator();
+                const gainNode = audioCtx.createGain();
+                
+                osc.connect(gainNode);
+                gainNode.connect(audioCtx.destination);
+                
+                // Use sine wave for soft, pleasant sound
+                osc.type = 'sine';
+                
+                // Stacked arpeggio - each note slightly higher
+                const freqMultiplier = Math.pow(1.2599, i); // Major third intervals
+                osc.frequency.value = frequencies[noteCount - 1] * freqMultiplier;
+                
+                // Shorter duration for subtle sound
+                const duration = 0.10 + (noteCount * 0.03);
+                const delayBetweenNotes = 0.02;
+                
+                // Envelope for smooth fade in/out - very low volume
+                const noteTime = now + i * delayBetweenNotes;
+                const maxVolume = 0.08 * settings.volume / noteCount;
+                gainNode.gain.setValueAtTime(0, noteTime);
+                gainNode.gain.linearRampToValueAtTime(maxVolume, noteTime + 0.01);
+                gainNode.gain.exponentialRampToValueAtTime(0.001, noteTime + duration - i * delayBetweenNotes);
+                
+                osc.start(noteTime);
+                osc.stop(noteTime + duration - i * delayBetweenNotes);
             }
         }
 
@@ -1023,6 +1388,7 @@
         }
 
         function startGame() {
+            initAudio(); // Initialize audio on user interaction
             initBoard();
             score = 0;
             level = 1;
