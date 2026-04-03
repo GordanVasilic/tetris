@@ -2153,50 +2153,55 @@
         }
 
         function startGame() {
-            initAudio(); // Initialize audio on user interaction
-            initBoard();
-            score = 0;
-            level = 1;
-            linesCleared = 0;
-            dropInterval = 1000;
-            nextPiece = getRandomPieceType();
-            particles = []; // Reset particles
-            spawnPiece();
-            updateUI();
-            
-            document.getElementById('startOverlay').classList.add('hidden');
-            document.getElementById('gameOverOverlay').classList.add('hidden');
-            
-            gameRunning = true;
-            gamePaused = false;
-            lastDropTime = performance.now();
-            
-            // Initialize mobile touch controls if not already initialized
-            if (!window.touchController || !window.onScreenControls) {
-                const gameAPI = {
-                    get isRunning() { return gameRunning; },
-                    get isPaused() { return gamePaused; },
-                    movePiece: movePiece,
-                    rotatePiece: rotatePiece,
-                    hardDrop: hardDrop,
-                    updateUI: updateUI
-                };
+            try {
+                console.log("startGame called");
+                initAudio(); // Initialize audio on user interaction
+                initBoard();
+                score = 0;
+                level = 1;
+                linesCleared = 0;
+                dropInterval = 1000;
+                nextPiece = getRandomPiece();
+                particles = []; // Reset particles
+                spawnPiece();
+                updateUI();
                 
-                window.touchController = new MobileTouchController(gameAPI);
-                window.onScreenControls = new OnScreenControls(gameAPI);
+                document.getElementById('startOverlay').classList.add('hidden');
+                document.getElementById('gameOverOverlay').classList.add('hidden');
+                
+                gameRunning = true;
+                gamePaused = false;
+                lastDropTime = performance.now();
+                
+                // Initialize mobile touch controls if not already initialized
+                if (!window.touchController || !window.onScreenControls) {
+                    const gameAPI = {
+                        get isRunning() { return gameRunning; },
+                        get isPaused() { return gamePaused; },
+                        movePiece: movePiece,
+                        rotatePiece: rotatePiece,
+                        hardDrop: hardDrop,
+                        updateUI: updateUI
+                    };
+                    
+                    window.touchController = new MobileTouchController(gameAPI);
+                    window.onScreenControls = new OnScreenControls(gameAPI);
+                }
+                
+                // Show touch hint on first play (if not shown before)
+                const hintShown = sessionStorage.getItem('touchHintShown');
+                if (!hintShown && /Android|iPhone|iPad|iPod/i.test(navigator.userAgent)) {
+                    document.getElementById('touchZoneHint').classList.add('visible');
+                    setTimeout(() => {
+                        document.getElementById('touchZoneHint').classList.remove('visible');
+                    }, 2000);
+                    sessionStorage.setItem('touchHintShown', 'true');
+                }
+                
+                gameLoop();
+            } catch (e) {
+                console.error("Error in startGame:", e);
             }
-            
-            // Show touch hint on first play (if not shown before)
-            const hintShown = sessionStorage.getItem('touchHintShown');
-            if (!hintShown && /Android|iPhone|iPad|iPod/i.test(navigator.userAgent)) {
-                document.getElementById('touchZoneHint').classList.add('visible');
-                setTimeout(() => {
-                    document.getElementById('touchZoneHint').classList.remove('visible');
-                }, 2000);
-                sessionStorage.setItem('touchHintShown', 'true');
-            }
-            
-            gameLoop();
         }
 
         function restartGame() {
